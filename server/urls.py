@@ -26,7 +26,7 @@ urlpatterns = patterns('',
     # API documentor
      url(r'doc/', include('tastypie_swagger.urls', namespace='tastypie_swagger')),
     # API resources    
-    url('', include(v1_api.urls))
+    url('', include(v1_api.urls)),
 )
 
 

@@ -21,6 +21,7 @@ DATABASES = {
 
 # To generate the API's documentation (with swagger)
 TASTYPIE_SWAGGER_API_MODULE = "urls.v1_api"
+GRAPPELLI_ADMIN_TITLE = "jQuest Dashboard"
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -105,11 +106,10 @@ ROOT_URLCONF = 'urls'
 WSGI_APPLICATION = 'wsgi.application'
 
 TEMPLATE_DIRS = (
-    here("templates")
-    # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
-    # Always use forward slashes, even on Windows.
-    # Don't forget to use absolute paths, not relative paths.
+    here("templates"),
 )
+
+
 
 INSTALLED_APPS = (
     'tastypie',
