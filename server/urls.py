@@ -1,32 +1,32 @@
 from django.conf.urls import patterns, include, url
 from django.contrib import admin
+from tastypie.api import Api
 # Models available from the API
 from jquest.api import *
 
 admin.autodiscover()
 
-instance_resource = InstanceResource()
-mission_resource = MissionResource()
-missionrelationship_resource = MissionRelationshipResource()
-user_resource = UserResource()
-useroauth_resource = UserOauthResource()
-userprogression_resource = UserProgressionResource()
-post_resource = PostResource()
-language_resource = LanguageResource()
-
-API_ROOT = ""
+v1_api = Api(api_name='v1')
+v1_api.register(InstanceResource())
+v1_api.register(MissionResource())
+v1_api.register(MissionRelationshipResource())
+v1_api.register(UserResource())
+v1_api.register(UserOauthResource())
+v1_api.register(UserProgressionResource())
+v1_api.register(PostResource())
+v1_api.register(LanguageResource())
 
 urlpatterns = patterns('',
+    # Admin documentor
+    url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
+    # Admin dashboard
     url(r'^admin/', include(admin.site.urls) ),
-    url(r'^grappelli/',include('grappelli.urls') ),
-    (API_ROOT, include(instance_resource.urls) ),
-    (API_ROOT, include(mission_resource.urls) ),
-    (API_ROOT, include(missionrelationship_resource.urls) ),
-    (API_ROOT, include(user_resource.urls) ),
-    (API_ROOT, include(useroauth_resource.urls) ),
-    (API_ROOT, include(userprogression_resource.urls) ),
-    (API_ROOT, include(post_resource.urls) ),
-    (API_ROOT, include(language_resource.urls) )
+    # Admin theme
+    url(r'^grappelli/', include('grappelli.urls') ),
+    # API documentor
+     url(r'doc/', include('tastypie_swagger.urls', namespace='tastypie_swagger')),
+    # API resources    
+    url('', include(v1_api.urls))
 )
 
 

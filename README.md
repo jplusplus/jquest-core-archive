@@ -40,7 +40,7 @@ The following environment variables should be use :
 ### Synchronize the database
 Once you saved the settings file, run this command to synchronize your database with the jQuest's models:
 
-    $ python server/mange.py syncdb
+    $ python jquest_core/mange.py syncdb
 
 You must see this result:  
     
@@ -74,7 +74,7 @@ Say **yes** to the prompt and enter your superuser credidentials.
 ### Launching
 To wake up jQuest Core, run the following command from the server directory:
 
-    $ python server/manage.py runserver
+    $ python jquest_core/manage.py runserver
 
 You must see this result:
 

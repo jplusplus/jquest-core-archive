@@ -23,6 +23,7 @@ class PostAdmin(admin.ModelAdmin):
 class UserOauthAdmin(admin.ModelAdmin):
     pass
 class UserProgressionAdmin(admin.ModelAdmin):
+    list_display = ("id","user","mission")
     pass
 
 # Register all models in admin
@@ -35,27 +36,3 @@ admin.site.register(UserProgression, UserProgressionAdmin)
 
 # Disable "Site" in the admin panel 
 admin.site.unregister(Site)
-
-"""
-class ReponseInline(admin.StackedInline):
-  model = Reponse
-  extra = 3
-
-class SondageAdmin(admin.ModelAdmin):
-  fields         = ('question', 'family')
-  list_display   = ('id','question','was_published_today')
-  inlines        = (ReponseInline,)
-  search_fields  = ("question",)
-  date_hierarchy = ("date_publication")
-
-  def was_published_today(a, self):
-    return self.date_publication.date() == datetime.date.today()
-  was_published_today.short_description = u'Publié aujourd\'hui ?'
-
-admin.site.register(Sondage, SondageAdmin)
-
-class ReponseAdmin(admin.ModelAdmin):
-  list_display = ('id','choix','sondage')
-
-admin.site.register(Reponse, ReponseAdmin)
-"""

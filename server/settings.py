@@ -19,6 +19,8 @@ DATABASES = {
     'default' : dj_database_url.config()
 }
 
+# To generate the API's documentation (with swagger)
+TASTYPIE_SWAGGER_API_MODULE = "urls.v1_api"
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -111,7 +113,8 @@ TEMPLATE_DIRS = (
 
 INSTALLED_APPS = (
     'tastypie',
-    'grappelli',
+    'tastypie_swagger',
+    'grappelli',    
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -119,11 +122,8 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.admin',
+    'django.contrib.admindocs',
     'jquest'
-    # Uncomment the next line to enable the admin:
-    # 'django.contrib.admin',
-    # Uncomment the next line to enable admin documentation:
-    # 'django.contrib.admindocs',
 )
 
 # A sample logging configuration. The only tangible logging

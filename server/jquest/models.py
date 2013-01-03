@@ -2,9 +2,9 @@ from django.db import models
 from django.contrib.auth.models import User
 
 class Instance(models.Model):
-    name = models.CharField(max_length=135)
-    host = models.CharField(max_length=135)
-    slug = models.CharField(max_length=135, blank=True)
+    name = models.CharField(max_length=135, help_text='Name of the Instance. Ex: "Syrian Quest"')
+    host = models.CharField(max_length=135, help_text='Domain where the instance is accessible. Ex: "syrianquest.com"')
+    slug = models.CharField(max_length=135, blank=True, help_text='Simplified version of the name. Ex: "syrianquest"')
     
     def __unicode__(self):
         return self.name
@@ -48,7 +48,12 @@ class UserOauth(models.Model):
         return self.user
 
 class UserProgression(models.Model):
+    PROGRESSION_STATES = (
+        (u'g', u"game"),
+        (u'f', u"failed"),
+        (u's', u"succeed")
+    )
     mission = models.ForeignKey(Mission, null=True, db_column='mission', blank=True)
     user = models.ForeignKey(User, null=True, db_column='user', blank=True)
     points = models.IntegerField(null=True, blank=True)
-    state = models.CharField(max_length=765, blank=True)    
+    state = models.CharField(max_length=2, blank=True, choices=PROGRESSION_STATES)    
