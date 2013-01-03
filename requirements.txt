@@ -8,4 +8,4 @@ python-dateutil>=2.1
 django-tastypie==0.9.11
 psycopg2
 dj-database-url
-tastypie_swagger
+django-tastypie-swagger
