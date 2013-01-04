@@ -9,9 +9,11 @@ from jquest.models import *
 
 class AdditionalModelResource(ModelResource):
     """ 
-        override the default ModelResource class to add an additional_detail_fields option
-        that adds fields in detail mode
+    Overrides the default ModelResource class to 
+        - add an additional_detail_fields option that adds fields in detail mode
+        - overrides the get_fields method to support the 'blank' attribute on model fields
     """
+
     class Meta:
         additional_detail_fields = {}
 
@@ -49,6 +51,25 @@ class AdditionalModelResource(ModelResource):
             bundle = self.detail_dehydrate(bundle)
         return bundle
 
+    @classmethod
+    def get_fields(cls, fields=None, excludes=None):
+        """
+        Unfortunately we must override this method because tastypie ignores 'blank' attribute
+        on model fields.
+
+        Here we invoke an insane workaround hack due to metaclass inheritance issues:
+            http://stackoverflow.com/questions/12757468/invoking-super-in-classmethod-called-from-metaclass-new
+        """
+        this_class = next(c for c in cls.__mro__ if c.__module__ == __name__ and c.__name__ == 'AdditionalModelResource')
+        fields = super(this_class, cls).get_fields(fields=fields, excludes=excludes)
+        if not cls._meta.object_class:
+            return fields
+        for django_field in cls._meta.object_class._meta.fields:
+            if django_field.blank == True:
+                res_field = fields.get(django_field.name, None)
+                if res_field:
+                    res_field.blank = True
+        return fields
 
 
 class UserResource(ModelResource):

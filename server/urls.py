@@ -24,7 +24,7 @@ urlpatterns = patterns('',
     # Admin theme
     url(r'^grappelli/', include('grappelli.urls') ),
     # API documentor
-     url(r'^v1/doc/', include('tastypie_swagger.urls', namespace='tastypie_swagger')),
+    url(r'^v1/doc/', include('tastypie_swagger.urls', namespace='tastypie_swagger')),
     # API resources    
     url('', include(v1_api.urls)),
 )
