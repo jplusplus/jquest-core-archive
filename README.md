@@ -9,8 +9,6 @@ To make jQuest Core up and running, you need:
 * **Pip** (package manager)
 * **Virtualenv** 1.8.4
 
-
-#### Quick install
 The following installation builds jQuest Core at the top of SQLite:
 
     $ sudo apt-get install python-pip python python-imaging python-pysqlite2 sqlite3 virtualenvwrapper
