@@ -9,6 +9,9 @@ ehthumbs.db
 Thumbs.db
 *.pyc
 
+# Users media
+server/media/*
+
 # Binary files and database
 *.db
 

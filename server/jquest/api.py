@@ -71,29 +71,81 @@ class AdditionalModelResource(ModelResource):
                     res_field.blank = True
         return fields
 
-
-class UserResource(ModelResource):
+class UserResource(AdditionalModelResource):
+    
     class Meta:
         excludes = ("password", "last_login", "email")
         queryset = User.objects.all()
         resource_name = 'user'
+        always_return_data = True,
+        filtering = {
+            "date_joined": ALL,
+            "first_name": ALL,
+            "id": ALL,
+            "is_active": ALL,
+            "is_staff": ALL,
+            "is_superuser": ALL,
+            "last_name": ALL,            
+            "resource_uri": ALL,
+            "username": ALL,
+        }
+
+        additional_detail_fields = {
+            'progressions': fields.ToManyField(
+                'jquest.api.UserProgressionResource', 
+                attribute=lambda bundle: UserProgression.objects.filter(user=bundle.obj),
+                full=True, 
+                null=True
+            )
+        }
         
         authentication = BasicAuthentication()
         authorization = DjangoAuthorization()
 
-class UserProgressionResource(ModelResource):    
-    user = fields.ToOneField(
-        UserResource,
-        "user",
-        full=True    
-    ) 
+
+
+    def obj_create(self, bundle, request=None, **kwargs):   
+        """
+            Overide the default obj_create method to save nested resources.
+        """     
+        bundle = super(UserResource, self).obj_create(bundle, request, **kwargs)      
+
+        # Oauths insertion
+        if 'oauths' in bundle.data:
+            # The insertion mode is differents accoding the type of the oauths attribut
+            oauth_type = type(bundle.data["oauths"])
+            # Post request is asking for create several UserOauths at the same time
+            if oauth_type == list:
+                # For each given UserOauth object
+                for o in bundle.data["oauths"]:
+                    oauth = UserOauth(**o)
+                    oauth.user = bundle.obj
+                    oauth.save()        
+            # Post request is asking for create an UserOauth at the same time
+            elif oauth_type == dict:
+                oauth = UserOauth(**bundle.data["oauths"])
+                oauth.user = bundle.obj
+                oauth.save()
+
+        bundle.obj.save()
+        return bundle
+
+
+class UserProgressionResource(ModelResource):            
+    mission = fields.ToOneField(
+        "jquest.api.MissionResource",
+        'mission',
+        full=False
+    )  
     class Meta:
         queryset = UserProgression.objects.all()
-        resource_name = 'userProgression'
+        resource_name = 'user_progression'
+        always_return_data = True
         
         authentication = BasicAuthentication()
         authorization = DjangoAuthorization()
 
+        
     def dehydrate_state(self, bundle):                
         # Looks for the state display
         state = [state[1] for state in UserProgression.PROGRESSION_STATES if bundle.data["state"] == state[0]]
@@ -101,9 +153,20 @@ class UserProgressionResource(ModelResource):
 
 
 class UserOauthResource(ModelResource):
+    user = fields.ToOneField(
+        UserResource,
+        "user",
+        full=True
+    )   
     class Meta:
         queryset = UserOauth.objects.all()
-        resource_name = 'userOauth'
+        resource_name = 'user_oauth'
+        always_return_data = True
+        filtering = {
+            'consumer_user_id': ALL,
+            'consumer': ALL,
+            'uset': ALL_WITH_RELATIONS
+        }
         
         authentication = BasicAuthentication()
         authorization = DjangoAuthorization()
@@ -122,9 +185,12 @@ class InstanceResource(AdditionalModelResource):
             )
         }
         resource_name = 'instance'
+        always_return_data = True
         filtering = {
             'slug': ALL,
-            'name': ALL
+            'name': ALL,
+            'host': ALL,
+            'missions__id': ALL
         }
         
         authentication = BasicAuthentication()
@@ -139,17 +205,28 @@ class MissionResource(ModelResource):
         full=False
     )    
 
-    # All users progressions related to that mission
-    progressions = fields.ToManyField(
-        to="jquest.api.UserProgressionResource",
-        attribute=lambda bundle: UserProgression.objects.filter(mission=bundle.obj,user=bundle.request.user), 
-        full=True,
-        null=True        
-    ) 
+    # parent
+    relationships = fields.ToManyField(
+        "jquest.api.MissionRelationshipResource",
+        attribute=lambda bundle: MissionRelationship.objects.filter(mission=bundle.obj),        
+        full=True, 
+        null=True
+    )
+
+    """
+        # All users progressions related to that mission
+        progressions = fields.ToManyField(
+            to="jquest.api.UserProgressionResource",
+            attribute=lambda bundle: UserProgression.objects.filter(mission=bundle.obj), 
+            full=True,
+            null=True        
+        ) 
+    """
 
     class Meta:
         queryset = Mission.objects.all()
         resource_name = 'mission'
+        always_return_data = True
         excludes = ("progressions",)
         filtering = {
             'name': ALL,
@@ -159,11 +236,18 @@ class MissionResource(ModelResource):
         authentication = BasicAuthentication()
         authorization = DjangoAuthorization()
 
+    # Convert image path to an URL
+    def dehydrate_image(self, bundle):
+        return bundle.request.build_absolute_uri(bundle.data["image"]) if bundle.data["image"] else None 
+
 
 class MissionRelationshipResource(ModelResource):
+    parent  = fields.ToOneField(MissionResource, "parent", full=False)
+    mission = fields.ToOneField(MissionResource, "mission", full=False)
+
     class Meta:
         queryset = MissionRelationship.objects.all()
-        resource_name = 'missionRelationship'
+        resource_name = 'mission_relationship'
         
         authentication = BasicAuthentication()
         authorization = DjangoAuthorization()
@@ -174,6 +258,7 @@ class LanguageResource(ModelResource):
     class Meta:
         queryset = Language.objects.all()
         resource_name = 'language'
+        always_return_data = True
         
         authentication = BasicAuthentication()
         authorization = DjangoAuthorization()
@@ -182,6 +267,7 @@ class PostResource(ModelResource):
     class Meta:
         queryset = Post.objects.all()
         resource_name = 'post'
+        always_return_data = True
         
         authentication = BasicAuthentication()
         authorization = DjangoAuthorization()

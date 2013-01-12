@@ -3,6 +3,7 @@ from django.contrib import admin
 from tastypie.api import Api
 # Models available from the API
 from jquest.api import *
+from django.conf import settings
 
 admin.autodiscover()
 
@@ -27,6 +28,10 @@ urlpatterns = patterns('',
     url(r'^v1/doc/', include('tastypie_swagger.urls', namespace='tastypie_swagger')),
     # API resources    
     url('', include(v1_api.urls)),
+    # Allow media access
+    url(r'^media/(?P<path>.*)$', 'django.views.static.serve', {
+        'document_root': settings.MEDIA_ROOT
+    }),
 )
 
 

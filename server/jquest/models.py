@@ -11,7 +11,9 @@ class Instance(models.Model):
 
 class Mission(models.Model):
     instance = models.ForeignKey(Instance, null=True, db_column='instance', blank=True)
-    name = models.CharField(max_length=135, blank=True)
+    name = models.CharField(max_length=135, blank=True)  
+    description = models.TextField(blank=True)
+    image = models.ImageField('Image', upload_to='images/', blank=True)  
 
     def __unicode__(self):
         return str(self.instance) + ": " + self.name
@@ -31,7 +33,7 @@ class Post(models.Model):
     title = models.CharField(max_length=768, blank=True)
     excerpt = models.CharField(max_length=1536, blank=True)
     content = models.TextField(blank=True)
-    createdat = models.DateTimeField(null=True, db_column='createdAt', blank=True) # Field name made lowercase.
+    created_at = models.DateTimeField(null=True, db_column='created_at', blank=True) # Field name made lowercase.
     language = models.ForeignKey(Language, null=True, db_column='language', blank=True)
     
     def __unicode__(self):
@@ -39,13 +41,13 @@ class Post(models.Model):
   
 class UserOauth(models.Model):
     consumer = models.CharField(max_length=765, blank=True)
-    consumeruserid = models.IntegerField(null=True, db_column='consumerUserId', blank=True) # Field name made lowercase.
-    oauthaccesstoken = models.CharField(max_length=765, db_column='oauthAccessToken', blank=True) # Field name made lowercase.
-    oauthaccesstokensecret = models.CharField(max_length=765, db_column='oauthAccessTokenSecret', blank=True) # Field name made lowercase.
+    consumer_user_id = models.IntegerField(null=True, db_column='consumer_user_id', blank=True) # Field name made lowercase.
+    oauth_access_token = models.CharField(max_length=765, db_column='oauth_access_token', blank=True) # Field name made lowercase.
+    oauth_access_token_secret = models.CharField(max_length=765, db_column='oauth_access_token_secret', blank=True) # Field name made lowercase.
     user = models.ForeignKey(User, null=True, db_column='user', blank=True)
 
     def __unicode__(self):
-        return self.user
+        return str(self.user) + " using " + self.consumer
 
 class UserProgression(models.Model):
     PROGRESSION_STATES = (
@@ -56,4 +58,7 @@ class UserProgression(models.Model):
     mission = models.ForeignKey(Mission, null=True, db_column='mission', blank=True)
     user = models.ForeignKey(User, null=True, db_column='user', blank=True)
     points = models.IntegerField(null=True, blank=True)
-    state = models.CharField(max_length=2, blank=True, choices=PROGRESSION_STATES)    
+    state = models.CharField(max_length=2, blank=True, choices=PROGRESSION_STATES)   
+
+    def __unicode__(self):
+        return str(self.user) + " on " + str(self.mission)
