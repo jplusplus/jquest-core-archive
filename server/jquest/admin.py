@@ -29,6 +29,8 @@ class PostAdmin(admin.ModelAdmin):
     pass    
 class UserOauthAdmin(admin.ModelAdmin):
     pass
+class UserTokenAdmin(admin.ModelAdmin):
+    pass
 class UserProgressionAdmin(admin.ModelAdmin):    
     pass
 
@@ -38,6 +40,7 @@ admin.site.register(Mission, MissionAdmin)
 admin.site.register(Language, LanguageAdmin)
 admin.site.register(Post, PostAdmin)
 admin.site.register(UserOauth, UserOauthAdmin)
+admin.site.register(UserToken, UserTokenAdmin)
 admin.site.register(UserProgression, UserProgressionAdmin)
 
 # Disable "Site" in the admin panel 

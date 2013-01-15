@@ -165,7 +165,26 @@ class UserOauthResource(ModelResource):
         filtering = {
             'consumer_user_id': ALL,
             'consumer': ALL,
-            'uset': ALL_WITH_RELATIONS
+            'user': ALL_WITH_RELATIONS
+        }
+        
+        authentication = BasicAuthentication()
+        authorization = DjangoAuthorization()
+
+class UserTokenResource(ModelResource):
+    user = fields.ToOneField(
+        UserResource,
+        "user",
+        full=True
+    )   
+    class Meta:
+        queryset = UserToken.objects.all()
+        resource_name = 'user_token'
+        always_return_data = True
+        filtering = {
+            'user': ALL_WITH_RELATIONS,
+            'token': ALL,
+            'created_at': ALL
         }
         
         authentication = BasicAuthentication()
