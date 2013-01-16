@@ -5,6 +5,9 @@ from tastypie.authorization import DjangoAuthorization
 # Models available from the API
 from django.contrib.auth.models import User
 from jquest.models import *
+# Authentication tools
+from django.contrib.auth.hashers import check_password, make_password
+from django.conf.urls.defaults import url
 
 
 class AdditionalModelResource(ModelResource):
@@ -74,7 +77,7 @@ class AdditionalModelResource(ModelResource):
 class UserResource(AdditionalModelResource):
     
     class Meta:
-        excludes = ("password", "last_login", "email")
+        excludes = ("last_login")
         queryset = User.objects.all()
         resource_name = 'user'
         always_return_data = True,
@@ -88,6 +91,7 @@ class UserResource(AdditionalModelResource):
             "last_name": ALL,            
             "resource_uri": ALL,
             "username": ALL,
+            "email": ALL
         }
 
         additional_detail_fields = {
@@ -107,7 +111,7 @@ class UserResource(AdditionalModelResource):
     def obj_create(self, bundle, request=None, **kwargs):   
         """
             Overide the default obj_create method to save nested resources.
-        """     
+        """          
         bundle = super(UserResource, self).obj_create(bundle, request, **kwargs)      
 
         # Oauths insertion
@@ -127,8 +131,51 @@ class UserResource(AdditionalModelResource):
                 oauth.user = bundle.obj
                 oauth.save()
 
-        bundle.obj.save()
+        bundle.obj.set_password(bundle.data.get('password'))         
+        bundle.obj.save()         
         return bundle
+
+
+    def override_urls(self):
+        return [
+            url(r"^(?P<resource_name>%s)/(?P<pk>\d+?)/check_password/$" % self._meta.resource_name, self.wrap_view('check_password'), name="api_check_password"),            
+        ]
+
+    def check_password(self, request, **kwargs):
+        """
+            Method to verify a raw password against the saved encrypted one (only use through SSL!)
+        """
+        #TODO: Check the function for a password change with put
+        self.method_check(request, allowed=['get'])
+        self.is_authenticated(request)
+        self.throttle_check(request)
+
+        try:
+            obj = self.cached_obj_get(request=request, **self.remove_api_resource_names(kwargs))
+        except ObjectDoesNotExist:
+            return HttpGone()
+        except MultipleObjectsReturned:
+            return HttpMultipleChoices("More than one resource is found at this URI.")
+
+        # Validate with password or hash
+        # pbkdf2_sha256%2410000%24xQKw5vSgmCRt%24oDa0ljLoPx0aISmQoQeKWDVJ9n7ckZOjc18H8VxRQFA%3D
+        if request.GET.get('password'):
+            valid = check_password(request.GET.get('password'), obj.password)
+        else:
+            valid = request.GET.get('hash') == obj.password
+
+        self.log_throttled_access(request)
+
+        bundle = self.build_bundle(obj=obj, request=request)
+        bundle = self.full_dehydrate(bundle)
+        bundle = self.alter_detail_data_to_serialize(request, bundle)
+
+        #add out result
+        bundle.data['password_valid'] = valid
+        return self.create_response(request, bundle)
+
+
+
 
 
 class UserProgressionResource(ModelResource):            
