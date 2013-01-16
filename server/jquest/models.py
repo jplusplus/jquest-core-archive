@@ -40,8 +40,8 @@ class Post(models.Model):
         return self.title
   
 class UserOauth(models.Model):
-    consumer = models.CharField(max_length=765, blank=True)
-    consumer_user_id = models.IntegerField(null=True, db_column='consumer_user_id', blank=True)
+    consumer = models.CharField(max_length=165, blank=True)
+    consumer_user_id = models.CharField(max_length=165, blank=True)
     oauth_access_token = models.CharField(max_length=765, db_column='oauth_access_token', blank=True)
     oauth_access_token_secret = models.CharField(max_length=765, db_column='oauth_access_token_secret', blank=True)
     user = models.ForeignKey(User, null=True, db_column='user', blank=True)
