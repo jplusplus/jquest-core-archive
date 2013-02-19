@@ -80,7 +80,7 @@ class UserResource(AdditionalModelResource):
         excludes = ("last_login")
         queryset = User.objects.all()
         resource_name = 'user'
-        always_return_data = True,
+        always_return_data = True
         filtering = {
             "date_joined": ALL,
             "first_name": ALL,
@@ -188,6 +188,13 @@ class UserProgressionResource(ModelResource):
         queryset = UserProgression.objects.all()
         resource_name = 'user_progression'
         always_return_data = True
+
+        filtering = {
+            "mission": ALL,
+            "user": ALL,
+            "state": ALL
+        }
+
         
         authentication = BasicAuthentication()
         authorization = DjangoAuthorization()
