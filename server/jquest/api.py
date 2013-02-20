@@ -203,11 +203,20 @@ class UserProgressionResource(ModelResource):
         authentication = BasicAuthentication()
         authorization = DjangoAuthorization()
 
+    def getState(self, string):
+        states = UserProgression.PROGRESSION_STATES        
+        state  = [st for st in states if string == st[0] or string == st[1] ]
+        return state[0] if len(state) > 0 else False
         
     def dehydrate_state(self, bundle):                
         # Looks for the state display
-        state = [state[1] for state in UserProgression.PROGRESSION_STATES if bundle.data["state"] == state[0]]
-        return state[0] if len(state) > 0 else False        
+        return self.getState(bundle.data["state"])[1]
+
+    def hydrate_state(self, bundle):                
+        # Looks for the state code
+        bundle.data["state"] = self.getState(bundle.data["state"])[0]
+        return bundle
+
     
     def hydrate_user(self, bundle):
         """ set id instead of uri """
