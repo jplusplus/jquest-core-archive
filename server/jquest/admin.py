@@ -20,7 +20,7 @@ class InstanceAdmin(admin.ModelAdmin):
 
 class MissionAdmin(admin.ModelAdmin):
     search_fields  = ("name","instance")
-    list_display = ("name","instance", "id")
+    list_display = ("name","instance", "id")    
     inlines = (MissionParentInline,)
     
 class LanguageAdmin(admin.ModelAdmin):

@@ -184,6 +184,11 @@ class UserProgressionResource(ModelResource):
         'mission',
         full=False
     )  
+    user = fields.ToOneField(
+        "jquest.api.UserResource",
+        'user',
+        full=False
+    )  
     class Meta:
         queryset = UserProgression.objects.all()
         resource_name = 'user_progression'
@@ -194,7 +199,6 @@ class UserProgressionResource(ModelResource):
             "user": ALL,
             "state": ALL
         }
-
         
         authentication = BasicAuthentication()
         authorization = DjangoAuthorization()
@@ -203,7 +207,17 @@ class UserProgressionResource(ModelResource):
     def dehydrate_state(self, bundle):                
         # Looks for the state display
         state = [state[1] for state in UserProgression.PROGRESSION_STATES if bundle.data["state"] == state[0]]
-        return state[0] if len(state) > 0 else False
+        return state[0] if len(state) > 0 else False        
+    
+    def hydrate_user(self, bundle):
+        """ set id instead of uri """
+        bundle.data['user'] = User.objects.get(id=bundle.data['user'])
+        return bundle        
+
+    def hydrate_mission(self, bundle):
+        """ set id instead of uri """
+        bundle.data['mission'] = Mission.objects.get(id=bundle.data['mission'])
+        return bundle        
 
 
 class UserOauthResource(ModelResource):
