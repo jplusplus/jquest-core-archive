@@ -14,6 +14,7 @@ class Mission(models.Model):
     name = models.CharField(max_length=135, blank=True)  
     description = models.TextField(blank=True)
     image = models.ImageField('Image', upload_to='images/', blank=True)  
+    package = models.CharField(max_length=35, blank=True, help_text='Name of the jquest-mission package to load for this mission.')  
 
     def __unicode__(self):
         return str(self.instance) + ": " + self.name
