@@ -19,6 +19,11 @@ DATABASES = {
     'default' : dj_database_url.config()
 }
 
+# Preload data
+FIXTURE_DIRS = (
+    here('jquest/fixtures'),
+)
+
 # To generate the API's documentation (with swagger)
 TASTYPIE_SWAGGER_API_MODULE = "urls.v1_api"
 GRAPPELLI_ADMIN_TITLE = "jQuest Dashboard"
