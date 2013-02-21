@@ -228,7 +228,8 @@ class UserProgressionResource(ModelResource):
         """ set id instead of uri """
         if 'mission' in bundle.data and bundle.data['mission'].isdigit():
             bundle.data['mission'] = Mission.objects.get(id=bundle.data['mission'])        
-        return bundle        
+        return bundle  
+             
 
 
 class UserOauthResource(ModelResource):
