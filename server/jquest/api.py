@@ -219,13 +219,15 @@ class UserProgressionResource(ModelResource):
 
     
     def hydrate_user(self, bundle):
-        """ set id instead of uri """
-        bundle.data['user'] = User.objects.get(id=bundle.data['user'])
-        return bundle        
+        """ set id instead of uri """   
+        if 'user' in bundle.data and bundle.data['user'].isdigit():
+            bundle.data['user'] = User.objects.get(id=bundle.data['user'])
+        return bundle
 
     def hydrate_mission(self, bundle):
         """ set id instead of uri """
-        bundle.data['mission'] = Mission.objects.get(id=bundle.data['mission'])
+        if 'mission' in bundle.data and bundle.data['mission'].isdigit():
+            bundle.data['mission'] = Mission.objects.get(id=bundle.data['mission'])        
         return bundle        
 
 
