@@ -36,7 +36,7 @@ The following environment variables should be use
 *Tips: you can also use [autoenv](https://github.com/kennethreitz/autoenv) to load virtual environment and variables automatically when you `cd` your server directory.*
 
 ### Prepare your database
-Postgresql must support the *hstore* extention. To activate this extention on your jQuest database, connect you using psql on your jquest database and enter:
+Postgresql must support the [hstore](http://www.postgresql.org/docs/9.0/interactive/hstore.html) extention. To activate this extention on your jQuest database, connect you using psql on your jquest database and enter:
 
 ```sql
 CREATE EXTENSION hstore;
