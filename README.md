@@ -4,14 +4,14 @@
 To make jQuest Core up and running, you need:
 
 * **Python** 2.7.3
-* **SQLite** 3.7.* or **MySQL** 14.* or **PostGreSQL** 9.*
+* **PostGreSQL** 9.*
 * A database connector/interface for python (Ex: *python-mysqldb*)
 * **Pip** (package manager)
 * **Virtualenv** 1.8.4
 
 The following installation builds jQuest Core at the top of SQLite:
 
-    $ sudo apt-get install python-pip python python-imaging python-pysqlite2 sqlite3 virtualenvwrapper
+    $ sudo apt-get install python-pip python python-imaging virtualenvwrapper postgresql-9.1 
 
 ### Load virtualenv
 From the top-level directory, create a virtual environment :
@@ -28,12 +28,19 @@ To download and set up the whole dependancies three and the active virtualenv, s
     $ pip install -r requirements.text
 
 ### Environment variables
-The following environment variables should be use :
+The following environment variables should be use 
 
 * **PORT** defines the port to listen to when using foreman (ex: *80*).
 * **DATABASE_URL** defines the Universal Resource Locator (ex: *sqlite:///:jquest.db*) 
     
 *Tips: you can also use [autoenv](https://github.com/kennethreitz/autoenv) to load virtual environment and variables automatically when you `cd` your server directory.*
+
+### Prepare your database
+Postgresql must support the *hstore* extention. To activate this extention on your jQuest database, connect you using psql on your jquest database and enter:
+
+```sql
+CREATE EXTENSION hstore;
+```
 
 ### Synchronize the database
 Once you saved the settings file, run this command to synchronize your database with the jQuest's models:
