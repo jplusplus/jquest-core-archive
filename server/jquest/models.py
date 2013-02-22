@@ -93,7 +93,7 @@ class Entity(models.Model):
     upadted_at = models.DateTimeField(null=True, auto_now=True, db_column='updated_at', blank=True)
     
     class Meta:
-        verbose_name_plural = "entities"
+        verbose_name_plural = "entities"    
 
     def __unicode__(self):
         return str(self.id) + "  (" + str(self.family) + ')'
@@ -106,4 +106,4 @@ class EntityEval(models.Model):
     upadted_at = models.DateTimeField(null=True, auto_now=True, db_column='updated_at', blank=True)
 
     def __unicode__(self):
-        return str(self.user) + " evalutes " + str(self.entity)
+        return str(self.user) + " evaluted entity " + str(self.entity)

@@ -17,6 +17,9 @@ v1_api.register(UserTokenResource())
 v1_api.register(UserProgressionResource())
 v1_api.register(PostResource())
 v1_api.register(LanguageResource())
+v1_api.register(EntityFamilyResource())
+v1_api.register(EntityResource())
+v1_api.register(EntityEvalResource())
 
 urlpatterns = patterns('',
     # Admin documentor

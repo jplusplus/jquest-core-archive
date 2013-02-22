@@ -8,6 +8,7 @@ from jquest.models import *
 # Authentication tools
 from django.contrib.auth.hashers import check_password, make_password
 from django.conf.urls.defaults import url
+import json
 
 
 class AdditionalModelResource(ModelResource):
@@ -361,6 +362,7 @@ class LanguageResource(ModelResource):
         authentication = BasicAuthentication()
         authorization = DjangoAuthorization()
 
+
 class PostResource(ModelResource):
     class Meta:
         queryset = Post.objects.all()
@@ -369,3 +371,70 @@ class PostResource(ModelResource):
         
         authentication = BasicAuthentication()
         authorization = DjangoAuthorization()
+
+
+class EntityFamilyResource(ModelResource):
+    class Meta:
+        queryset = EntityFamily.objects.all()
+        resource_name = 'entity_family'
+        always_return_data = True
+        
+        authentication = BasicAuthentication()
+        authorization = DjangoAuthorization()
+
+class EntityResource(ModelResource):
+    # Instance related to that mission
+    family = fields.ToOneField(
+        EntityFamilyResource,
+        'family',
+        full=True
+    )    
+
+    class Meta:
+        queryset = Entity.objects.all()
+        resource_name = 'entity'
+        always_return_data = True
+        
+        authentication = BasicAuthentication()
+        authorization = DjangoAuthorization()
+
+    def hydrate_data(self, bundle):
+        # Convert data from json to dict
+        bundle.data["data"] = json.loads(bundle.data["data"])    
+        return bundle
+
+    def hydrate_family(self, bundle):
+        """ set id instead of uri """   
+        if 'family' in bundle.data and bundle.data['family'].isdigit():
+            bundle.data['family'] = EntityFamily.objects.get(id=bundle.data['family'])
+        return bundle
+
+class EntityEvalResource(ModelResource):
+    # Instance related to that mission
+    entity = fields.ToOneField(
+        EntityResource,
+        'entity',
+        full=True
+    )    
+
+    # Instance related to that mission
+    user = fields.ToOneField(
+        UserResource,
+        'user',
+        full=True
+    )    
+
+    class Meta:
+        queryset = EntityEval.objects.all()
+        resource_name = 'entity_eval'
+        always_return_data = True
+        
+        authentication = BasicAuthentication()
+        authorization = DjangoAuthorization()
+
+    def hydrate(self, bundle):        
+        if 'entity' in bundle.data and bundle.data['entity'].isdigit():             
+            bundle.data['entity'] = Entity.objects.get(id=bundle.data['entity'])
+        if 'user' in bundle.data and bundle.data['user'].isdigit():
+            bundle.data['user'] = User.objects.get(id=bundle.data['user'])
+        return bundle
