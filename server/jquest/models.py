@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
-
+from django_hstore import hstore
+    
 class Instance(models.Model):
     name = models.CharField(max_length=135, help_text='Name of the Instance. Ex: "Syrian Quest"')
     host = models.CharField(max_length=135, help_text='Domain where the instance is accessible. Ex: "syrianquest.com"')
@@ -25,16 +26,17 @@ class MissionRelationship(models.Model):
 
 class Language(models.Model):
     code = models.CharField(max_length=24, primary_key=True)
-    name = models.CharField(max_length=135, blank=True)
+    name = models.CharField(max_length=128, blank=True)
 
     def __unicode__(self):
         return self.name
 
 class Post(models.Model):
-    title = models.CharField(max_length=768, blank=True)
+    title = models.CharField(max_length=255, blank=True)
     excerpt = models.CharField(max_length=1536, blank=True)
     content = models.TextField(blank=True)
-    created_at = models.DateTimeField(null=True, db_column='created_at', blank=True)
+    created_at = models.DateTimeField(null=True, auto_now_add=True, db_column='created_at', blank=True)
+    upadted_at = models.DateTimeField(null=True, auto_now=True, db_column='updated_at', blank=True)
     language = models.ForeignKey(Language, null=True, db_column='language', blank=True)
     
     def __unicode__(self):
@@ -52,7 +54,7 @@ class UserOauth(models.Model):
 
 class UserToken(models.Model):
     user = models.ForeignKey(User, null=True, db_column='user', blank=True)
-    created_at = models.DateTimeField(null=True, db_column='created_at', blank=True) 
+    created_at = models.DateTimeField(null=True, auto_now_add=True, db_column='created_at', blank=True) 
     token = models.CharField(max_length=128, blank=True)
 
     def __unicode__(self):
@@ -71,3 +73,37 @@ class UserProgression(models.Model):
 
     def __unicode__(self):
         return str(self.user) + " on " + str(self.mission)
+
+
+class EntityFamily(models.Model):
+    name = models.CharField(max_length=128, blank=True, help_text='Name of the family type and its provider')
+    schema_url = models.CharField(max_length=512, blank=True, help_text='URL that describes the schema of the entity')
+
+    class Meta:
+        verbose_name_plural = "Entity families"
+
+    def __unicode__(self):
+        return self.name
+
+class Entity(models.Model):
+    family =  models.ForeignKey(EntityFamily, null=False)    
+    data = hstore.DictionaryField(db_index=True)
+    objects = hstore.HStoreManager()
+    created_at = models.DateTimeField(null=True, auto_now_add=True, db_column='created_at', blank=True)
+    upadted_at = models.DateTimeField(null=True, auto_now=True, db_column='updated_at', blank=True)
+    
+    class Meta:
+        verbose_name_plural = "entities"
+
+    def __unicode__(self):
+        return str(self.id) + "  (" + str(self.family) + ')'
+
+class EntityEval(models.Model):
+    entity =  models.ForeignKey(Entity, null=False)
+    user =  models.ForeignKey(User, null=False)
+    value = models.CharField(max_length=512, blank=True)    
+    created_at = models.DateTimeField(null=True, auto_now_add=True, db_column='created_at', blank=True)
+    upadted_at = models.DateTimeField(null=True, auto_now=True, db_column='updated_at', blank=True)
+
+    def __unicode__(self):
+        return str(self.user) + " evalutes " + str(self.entity)

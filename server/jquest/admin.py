@@ -32,7 +32,13 @@ class UserOauthAdmin(admin.ModelAdmin):
 class UserTokenAdmin(admin.ModelAdmin):
     pass
 class UserProgressionAdmin(admin.ModelAdmin):    
-    pass
+    pass    
+class EntityAdmin(admin.ModelAdmin):
+    pass    
+class EntityEvalAdmin(admin.ModelAdmin):
+    pass    
+class EntityFamilyAdmin(admin.ModelAdmin):
+    pass    
 
 # Register all models in admin
 admin.site.register(Instance, InstanceAdmin)
@@ -42,6 +48,9 @@ admin.site.register(Post, PostAdmin)
 admin.site.register(UserOauth, UserOauthAdmin)
 admin.site.register(UserToken, UserTokenAdmin)
 admin.site.register(UserProgression, UserProgressionAdmin)
+admin.site.register(Entity, EntityAdmin)
+admin.site.register(EntityEval, EntityEvalAdmin)
+admin.site.register(EntityFamily, EntityFamilyAdmin)
 
 # Disable "Site" in the admin panel 
 admin.site.unregister(Site)
