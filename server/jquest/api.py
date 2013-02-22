@@ -10,6 +10,11 @@ from django.contrib.auth.hashers import check_password, make_password
 from django.conf.urls.defaults import url
 import json
 
+def is_digit_id(field, dic):
+    """
+    Determines if the given field exists in dic and is a digit id 
+    """
+    return field in dic and ( type(dic[field]) == int or dic[field].isdigit() )
 
 class AdditionalModelResource(ModelResource):
     """ 
@@ -400,7 +405,7 @@ class EntityResource(ModelResource):
 
     def hydrate_family(self, bundle):
         """ set id instead of uri """   
-        if 'family' in bundle.data and bundle.data['family'].isdigit():
+        if is_digit_id('family', bundle.data):
             bundle.data['family'] = EntityFamily.objects.get(id=bundle.data['family'])        
         return bundle
 
@@ -428,9 +433,19 @@ class EntityEvalResource(ModelResource):
         authentication = BasicAuthentication()
         authorization = DjangoAuthorization()
 
-    def hydrate(self, bundle):        
-        if 'entity' in bundle.data and bundle.data['entity'].isdigit():             
+    def hydrate(self, bundle):              
+        # Is the given entity a digit id ?  
+        if is_digit_id('entity', bundle.data):     
+            # If yes, got it        
             bundle.data['entity'] = Entity.objects.get(id=bundle.data['entity'])
-        if 'user' in bundle.data and bundle.data['user'].isdigit():
-            bundle.data['user'] = User.objects.get(id=bundle.data['user'])
+        # Are we trying to use the fid/family couple to evaluate the entity ?
+        elif 'fid' in bundle.data and 'family' in bundle.data:
+            # If yes, got the entity
+            fid = bundle.data['fid'];
+            family = bundle.data['family'];
+            bundle.data['entity'] = Entity.objects.get(fid=fid, family=family)
+        # Is the given user a digit id ?  
+        if is_digit_id('user', bundle.data):
+            # If yes, got it        
+            bundle.data['user'] = User.objects.get(id=bundle.data['user'])            
         return bundle
