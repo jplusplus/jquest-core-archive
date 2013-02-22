@@ -400,14 +400,15 @@ class EntityResource(ModelResource):
 
     def hydrate_data(self, bundle):
         # Convert data from json to dict
-        bundle.data["data"] = json.loads(bundle.data["data"])    
+        #bundle.data["data"] = json.loads(bundle.data["data"])
         return bundle
 
     def hydrate_family(self, bundle):
         """ set id instead of uri """   
         if 'family' in bundle.data and bundle.data['family'].isdigit():
-            bundle.data['family'] = EntityFamily.objects.get(id=bundle.data['family'])
+            bundle.data['family'] = EntityFamily.objects.get(id=bundle.data['family'])        
         return bundle
+
 
 class EntityEvalResource(ModelResource):
     # Instance related to that mission

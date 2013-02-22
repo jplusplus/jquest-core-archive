@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django_hstore import hstore
+from jsonfield import JSONField
     
 class Instance(models.Model):
     name = models.CharField(max_length=135, help_text='Name of the Instance. Ex: "Syrian Quest"')
@@ -87,8 +88,7 @@ class EntityFamily(models.Model):
 
 class Entity(models.Model):
     family =  models.ForeignKey(EntityFamily, null=False)    
-    data = hstore.DictionaryField(db_index=True)
-    objects = hstore.HStoreManager()
+    data = JSONField()
     created_at = models.DateTimeField(null=True, auto_now_add=True, db_column='created_at', blank=True)
     upadted_at = models.DateTimeField(null=True, auto_now=True, db_column='updated_at', blank=True)
     
