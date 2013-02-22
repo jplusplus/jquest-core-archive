@@ -1,23 +1,5 @@
 [
   {
-    "pk": 4,
-    "model": "auth.user",
-    "fields": {
-      "username": "pierre.romera@gmail.com",
-      "first_name": "",
-      "last_name": "",
-      "is_active": true,
-      "is_superuser": false,
-      "is_staff": false,
-      "last_login": "2013-01-16T21:26:24.478Z",
-      "groups": [],
-      "user_permissions": [],
-      "password": "pbkdf2_sha256$10000$FIiKXNPEHUGr$EYmiq9V6YW/KN1kES6MQvkLMhqNkx/sVun65ahdWXIc=",
-      "email": "pierre.romera@gmail.com",
-      "date_joined": "2013-01-16T21:26:24.398Z"
-    }
-  },
-  {
     "pk": 6,
     "model": "auth.user",
     "fields": {
@@ -36,23 +18,30 @@
     }
   },
   {
+    "pk": 4,
+    "model": "auth.user",
+    "fields": {
+      "username": "pierre.romera@gmail.com",
+      "first_name": "",
+      "last_name": "",
+      "is_active": true,
+      "is_superuser": false,
+      "is_staff": false,
+      "last_login": "2013-01-16T21:26:24.478Z",
+      "groups": [],
+      "user_permissions": [],
+      "password": "pbkdf2_sha256$10000$FIiKXNPEHUGr$EYmiq9V6YW/KN1kES6MQvkLMhqNkx/sVun65ahdWXIc=",
+      "email": "pierre.romera@gmail.com",
+      "date_joined": "2013-01-16T21:26:24.398Z"
+    }
+  },
+  {
     "pk": 1,
     "model": "jquest.instance",
     "fields": {
       "host": "syrianquest.dev",
       "name": "Syrian Quest",
       "slug": "syrianquest"
-    }
-  },
-  {
-    "pk": 1,
-    "model": "jquest.mission",
-    "fields": {
-      "instance": 1,
-      "image": "",
-      "package": "",
-      "name": "Bot Buster",
-      "description": "In this mission, you will learn how to detect a human from a robot. And bust some bots!"
     }
   },
   {
@@ -144,6 +133,17 @@
     }
   },
   {
+    "pk": 1,
+    "model": "jquest.mission",
+    "fields": {
+      "instance": 1,
+      "image": "",
+      "package": "bot-buster",
+      "name": "Bot Buster",
+      "description": "In this mission, you will learn how to detect a human from a robot. And bust some bots!"
+    }
+  },
+  {
     "pk": 3,
     "model": "jquest.missionrelationship",
     "fields": {
@@ -232,6 +232,14 @@
         "pierre.romera@gmail.com"
       ],
       "token": "XuaLeK8ApA5WeSQMfi5yYeJkQbCBnW"
+    }
+  },
+  {
+    "pk": 1,
+    "model": "jquest.entityfamily",
+    "fields": {
+      "name": "Twitter / Tweet",
+      "schema_url": "https://github.com/episod/twitter-api-fields-as-crowdsourced/wiki/Status-Tweet-fields"
     }
   }
 ]
