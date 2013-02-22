@@ -1,6 +1,5 @@
 from django.db import models
 from django.contrib.auth.models import User
-from django_hstore import hstore
 from jsonfield import JSONField
     
 class Instance(models.Model):
@@ -87,13 +86,15 @@ class EntityFamily(models.Model):
         return self.name
 
 class Entity(models.Model):
+    body = JSONField()
     family =  models.ForeignKey(EntityFamily, null=False)    
-    data = JSONField()
+    fid = models.CharField(max_length=50, help_text="Unique ID of the field in its family")
     created_at = models.DateTimeField(null=True, auto_now_add=True, db_column='created_at', blank=True)
     upadted_at = models.DateTimeField(null=True, auto_now=True, db_column='updated_at', blank=True)
     
     class Meta:
-        verbose_name_plural = "entities"    
+        verbose_name_plural = "entities"   
+        unique_together = ('family', 'fid') 
 
     def __unicode__(self):
         return str(self.id) + "  (" + str(self.family) + ')'
@@ -104,6 +105,9 @@ class EntityEval(models.Model):
     value = models.CharField(max_length=512, blank=True)    
     created_at = models.DateTimeField(null=True, auto_now_add=True, db_column='created_at', blank=True)
     upadted_at = models.DateTimeField(null=True, auto_now=True, db_column='updated_at', blank=True)
+        
+    class Meta:
+        unique_together = ('entity', 'user')
 
     def __unicode__(self):
         return str(self.user) + " evaluted entity " + str(self.entity)

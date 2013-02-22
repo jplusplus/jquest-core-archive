@@ -19,8 +19,6 @@ DATABASES = {
     'default' : dj_database_url.config()
 }
 
-# Override the default engine value
-DATABASES['default']['ENGINE'] = 'django_hstore.postgresql_psycopg2'
 
 # Preload data
 FIXTURE_DIRS = (
@@ -124,7 +122,6 @@ INSTALLED_APPS = (
     'tastypie',
     'tastypie_swagger',
     'grappelli',    
-    'django_hstore',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',

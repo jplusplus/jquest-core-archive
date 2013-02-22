@@ -398,11 +398,6 @@ class EntityResource(ModelResource):
         authentication = BasicAuthentication()
         authorization = DjangoAuthorization()
 
-    def hydrate_data(self, bundle):
-        # Convert data from json to dict
-        #bundle.data["data"] = json.loads(bundle.data["data"])
-        return bundle
-
     def hydrate_family(self, bundle):
         """ set id instead of uri """   
         if 'family' in bundle.data and bundle.data['family'].isdigit():
