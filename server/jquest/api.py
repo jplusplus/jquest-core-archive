@@ -352,7 +352,6 @@ class MissionRelationshipResource(ModelResource):
         authorization = DjangoAuthorization()
 
 
-
 class LanguageResource(ModelResource):
     class Meta:
         queryset = Language.objects.all()

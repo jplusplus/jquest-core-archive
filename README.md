@@ -42,6 +42,10 @@ Postgresql must support the [hstore](http://www.postgresql.org/docs/9.0/interact
 CREATE EXTENSION hstore;
 ```
 
+For more information about hstore on Django, see also:
+* The [Django Hstore](https://github.com/jordanm/django-hstore) module;
+* The [documentation from Django](http://django-orm.readthedocs.org/en/latest/orm-pg-hstore.html) about this extention.
+
 ### Synchronize the database
 Once you saved the settings file, run this command to synchronize your database with the jQuest's models:
 
