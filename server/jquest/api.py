@@ -8,7 +8,7 @@ from jquest.models import *
 # Authentication tools
 from django.contrib.auth.hashers import check_password, make_password
 from django.conf.urls.defaults import url
-import json
+
 
 def is_digit_id(field, dic):
     """
@@ -382,7 +382,7 @@ class EntityFamilyResource(ModelResource):
     class Meta:
         queryset = EntityFamily.objects.all()
         resource_name = 'entity_family'
-        always_return_data = True
+        always_return_data = True   
         
         authentication = BasicAuthentication()
         authorization = DjangoAuthorization()
@@ -395,19 +395,36 @@ class EntityResource(ModelResource):
         full=True
     )    
 
+    evaluations = fields.ToManyField(
+        "jquest.api.EntityEvalResource",
+        attribute=lambda bundle: EntityEval.objects.filter(entity=bundle.obj), 
+        null=True,
+        full=False
+    )
+
     class Meta:
         queryset = Entity.objects.all()
         resource_name = 'entity'
         always_return_data = True
+        filtering = {
+            'family': ALL_WITH_RELATIONS
+        }     
         
         authentication = BasicAuthentication()
         authorization = DjangoAuthorization()
+
 
     def hydrate_family(self, bundle):
         """ set id instead of uri """   
         if is_digit_id('family', bundle.data):
             bundle.data['family'] = EntityFamily.objects.get(id=bundle.data['family'])        
         return bundle
+
+    def dehydrate_body(self, bundle):
+        """
+        Evaluates the body field to show it as a dictionary
+        """        
+        return eval(bundle.data["body"])
 
 
 class EntityEvalResource(ModelResource):
