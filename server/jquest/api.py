@@ -395,11 +395,11 @@ class EntityResource(ModelResource):
         full=True
     )    
 
-    evaluations = fields.ToManyField(
+    entityeval = fields.ToManyField(
         "jquest.api.EntityEvalResource",
         attribute=lambda bundle: EntityEval.objects.filter(entity=bundle.obj), 
         null=True,
-        full=False
+        full=True
     )
 
     class Meta:
@@ -413,9 +413,26 @@ class EntityResource(ModelResource):
         authentication = BasicAuthentication()
         authorization = DjangoAuthorization()
 
+    def apply_filters(self, request, applicable_filters):
+        """
+        Filter entity by not evaluate by the given user
+        """
+        base_object_list = super(EntityResource, self).apply_filters(request, applicable_filters)
+        not_evaluated_by = request.GET.get('not_evaluated_by', None)
+        filters = {}
+        if not_evaluated_by:                       
+            base_object_list = base_object_list.exclude(entityeval__user__id=not_evaluated_by)
+
+        evaluated_by = request.GET.get('evaluated_by', None)
+        if evaluated_by:           
+            base_object_list = base_object_list.filter(entityeval__user__id=evaluated_by)
+
+        return base_object_list.filter(**filters).distinct()
 
     def hydrate_family(self, bundle):
-        """ set id instead of uri """   
+        """ 
+        Set id instead of uri 
+        """   
         if is_digit_id('family', bundle.data):
             bundle.data['family'] = EntityFamily.objects.get(id=bundle.data['family'])        
         return bundle
@@ -432,7 +449,7 @@ class EntityEvalResource(ModelResource):
     entity = fields.ToOneField(
         EntityResource,
         'entity',
-        full=True
+        full=False
     )    
 
     # Instance related to that mission
