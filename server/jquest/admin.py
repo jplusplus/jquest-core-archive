@@ -31,7 +31,7 @@ class PostAdmin(TranslationAdmin):
     # Populate the slug field automaticly
     prepopulated_fields = {'slug':('title_en',),}    
     formfield_overrides = {
-        models.TextField: {'widget': RedactorEditor},
+        models.TextField: {'widget': RedactorEditor()},
     }
 
 class UserOauthAdmin(admin.ModelAdmin):

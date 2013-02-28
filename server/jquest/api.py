@@ -420,7 +420,8 @@ class EntityResource(ModelResource):
         resource_name = 'entity'
         always_return_data = True
         filtering = {
-            'family': ALL_WITH_RELATIONS
+            'family': ALL_WITH_RELATIONS,
+            'body': ALL
         }     
         
         ordering = filtering
