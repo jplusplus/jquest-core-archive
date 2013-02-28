@@ -4,6 +4,7 @@ from tastypie.authentication import BasicAuthentication
 from tastypie.authorization import DjangoAuthorization
 # Models available from the API
 from django.contrib.auth.models import User
+from django.utils import translation
 from jquest.models import *
 # Authentication tools
 from django.contrib.auth.hashers import check_password, make_password
@@ -181,8 +182,6 @@ class UserResource(AdditionalModelResource):
         #add out result
         bundle.data['password_valid'] = valid
         return self.create_response(request, bundle)
-
-
 
 
 
@@ -370,15 +369,26 @@ class MissionRelationshipResource(ModelResource):
         authentication = BasicAuthentication()
         authorization = DjangoAuthorization()
 
-
 class PostResource(ModelResource):
     class Meta:
         queryset = Post.objects.all()
         resource_name = 'post'
         always_return_data = True
+        # Exludes located fields
+        excludes = ("title_en", "title_fr", "content_en", "content_fr", "excerpt_en", "excerpt_fr")
+
+        filtering = {
+            'slug': ALL,
+            'id': ALL,
+            'created_at': ALL,
+            'updated_at': ALL,            
+        }
         
+        ordering = filtering
+
         authentication = BasicAuthentication()
         authorization = DjangoAuthorization()
+
 
 
 class EntityFamilyResource(ModelResource):
