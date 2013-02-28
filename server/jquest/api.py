@@ -195,7 +195,7 @@ class UserProgressionResource(ModelResource):
     user = fields.ToOneField(
         "jquest.api.UserResource",
         'user',
-        full=False
+        full=True
     )  
     class Meta:
         queryset = UserProgression.objects.all()
@@ -424,7 +424,7 @@ class EntityResource(ModelResource):
         }     
         
         ordering = filtering
-        
+
         authentication = BasicAuthentication()
         authorization = DjangoAuthorization()
 
