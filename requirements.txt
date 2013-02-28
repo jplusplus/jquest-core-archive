@@ -11,3 +11,4 @@ pil==1.1.7
 psycopg2
 python-dateutil>=2.1
 wsgiref==0.1.2
+django-modeltranslation==0.5

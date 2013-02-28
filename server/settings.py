@@ -4,6 +4,7 @@ import sys
 import dj_database_url
 # for relative paths
 here = lambda x: os.path.join(os.path.abspath(os.path.dirname(__file__)), x)
+gettext = lambda s: s
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -37,7 +38,12 @@ TIME_ZONE = 'Europe/Paris'
 
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
-LANGUAGE_CODE = 'fr-fr'
+LANGUAGE_CODE = 'en'
+
+LANGUAGES = (
+    ('fr', gettext('French')),
+    ('en', gettext('English')),
+)
 
 SITE_ID = 1
 
@@ -55,6 +61,16 @@ USE_TZ = True
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/home/media/media.lawrence.com/media/"
 MEDIA_ROOT = here('media')
+
+# Place where upload post files
+# See also: https://github.com/shaunsephton/django-ckeditor#required
+CKEDITOR_UPLOAD_PATH = MEDIA_ROOT
+
+CKEDITOR_CONFIGS = {
+    'default': {
+        'toolbar': 'Full',
+    },
+}
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash.
@@ -117,11 +133,11 @@ TEMPLATE_DIRS = (
 )
 
 
-
 INSTALLED_APPS = (
+    'modeltranslation',
+    'grappelli',    
     'tastypie',
     'tastypie_swagger',
-    'grappelli',    
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -130,7 +146,8 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django.contrib.admin',
     'django.contrib.admindocs',
-    'jquest'
+    'ckeditor',
+    'jquest',
 )
 
 # A sample logging configuration. The only tangible logging
@@ -161,3 +178,4 @@ LOGGING = {
         },
     }
 }
+

@@ -2,7 +2,9 @@
 from django.contrib import admin
 from django.contrib.sites.models import Site
 from datetime import datetime
+from modeltranslation.admin import TranslationAdmin
 from jquest.models import *
+
 
 class MissionParentInline(admin.TabularInline):
     model = MissionRelationship
@@ -22,11 +24,11 @@ class MissionAdmin(admin.ModelAdmin):
     search_fields  = ("name","instance")
     list_display = ("name","instance", "id")    
     inlines = (MissionParentInline,)
-    
-class LanguageAdmin(admin.ModelAdmin):
-    pass
-class PostAdmin(admin.ModelAdmin):
-    pass    
+
+class PostAdmin(TranslationAdmin):
+    # Populate the slug field automaticly
+    prepopulated_fields = {'slug':('title_en',),}
+
 class UserOauthAdmin(admin.ModelAdmin):
     pass
 class UserTokenAdmin(admin.ModelAdmin):
@@ -43,7 +45,6 @@ class EntityFamilyAdmin(admin.ModelAdmin):
 # Register all models in admin
 admin.site.register(Instance, InstanceAdmin)
 admin.site.register(Mission, MissionAdmin)
-admin.site.register(Language, LanguageAdmin)
 admin.site.register(Post, PostAdmin)
 admin.site.register(UserOauth, UserOauthAdmin)
 admin.site.register(UserToken, UserTokenAdmin)

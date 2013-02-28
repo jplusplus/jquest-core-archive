@@ -16,7 +16,6 @@ v1_api.register(UserOauthResource())
 v1_api.register(UserTokenResource())
 v1_api.register(UserProgressionResource())
 v1_api.register(PostResource())
-v1_api.register(LanguageResource())
 v1_api.register(EntityFamilyResource())
 v1_api.register(EntityResource())
 v1_api.register(EntityEvalResource())
@@ -28,6 +27,8 @@ urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls) ),
     # Admin theme
     url(r'^grappelli/', include('grappelli.urls') ),
+    # Activates ckeditor    
+    (r'^ckeditor/', include('ckeditor.urls')),
     # API documentor
     url(r'^v1/doc/', include('tastypie_swagger.urls', namespace='tastypie_swagger')),
     # API resources    
