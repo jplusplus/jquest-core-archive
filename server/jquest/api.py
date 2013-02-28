@@ -371,16 +371,6 @@ class MissionRelationshipResource(ModelResource):
         authorization = DjangoAuthorization()
 
 
-class LanguageResource(ModelResource):
-    class Meta:
-        queryset = Language.objects.all()
-        resource_name = 'language'
-        always_return_data = True
-        
-        authentication = BasicAuthentication()
-        authorization = DjangoAuthorization()
-
-
 class PostResource(ModelResource):
     class Meta:
         queryset = Post.objects.all()
