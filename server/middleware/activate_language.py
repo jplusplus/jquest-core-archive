@@ -8,7 +8,6 @@ class LocaleMiddleware(object):
     translated to the language the user desires (if the language
     is available, of course).
     """
-
     def process_request(self, request):
         if "lang" in request.GET:
             language = request.GET["lang"]
