@@ -100,6 +100,8 @@ class UserResource(AdditionalModelResource):
             "email": ALL
         }
 
+        ordering = filtering
+
         additional_detail_fields = {
             'progressions': fields.ToManyField(
                 'jquest.api.UserProgressionResource', 
@@ -201,10 +203,13 @@ class UserProgressionResource(ModelResource):
         always_return_data = True
 
         filtering = {
-            "mission": ALL,
-            "user": ALL,
-            "state": ALL
-        }
+            "mission": ALL_WITH_RELATIONS,
+            "user": ALL_WITH_RELATIONS,
+            "state": ALL,
+            "points": ALL
+        }        
+
+        ordering = filtering
         
         authentication = BasicAuthentication()
         authorization = DjangoAuthorization()
@@ -253,6 +258,8 @@ class UserOauthResource(ModelResource):
             'consumer': ALL,
             'user': ALL_WITH_RELATIONS
         }
+
+        ordering = filtering
         
         authentication = BasicAuthentication()
         authorization = DjangoAuthorization()
@@ -272,6 +279,8 @@ class UserTokenResource(ModelResource):
             'token': ALL,
             'created_at': ALL
         }
+
+        ordering = filtering
         
         authentication = BasicAuthentication()
         authorization = DjangoAuthorization()
@@ -297,6 +306,8 @@ class InstanceResource(AdditionalModelResource):
             'host': ALL,
             'missions__id': ALL
         }
+
+        ordering = filtering
         
         authentication = BasicAuthentication()
         authorization = DjangoAuthorization()
@@ -336,7 +347,9 @@ class MissionResource(ModelResource):
         filtering = {
             'name': ALL,
             'instance': ALL
-        }        
+        }       
+
+        ordering = filtering
 
         authentication = BasicAuthentication()
         authorization = DjangoAuthorization()
@@ -409,6 +422,8 @@ class EntityResource(ModelResource):
         filtering = {
             'family': ALL_WITH_RELATIONS
         }     
+        
+        ordering = filtering
         
         authentication = BasicAuthentication()
         authorization = DjangoAuthorization()
