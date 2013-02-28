@@ -27,8 +27,6 @@ urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls) ),
     # Admin theme
     url(r'^grappelli/', include('grappelli.urls') ),
-    # Activates ckeditor    
-    (r'^ckeditor/', include('ckeditor.urls')),
     # API documentor
     url(r'^v1/doc/', include('tastypie_swagger.urls', namespace='tastypie_swagger')),
     # API resources    

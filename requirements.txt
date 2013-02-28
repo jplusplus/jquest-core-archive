@@ -12,4 +12,4 @@ psycopg2
 python-dateutil>=2.1
 wsgiref==0.1.2
 django-modeltranslation==0.5
-django-ckeditor
+git+https://github.com/mazelife/django-redactor

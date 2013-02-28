@@ -64,15 +64,6 @@ USE_TZ = True
 # Example: "/home/media/media.lawrence.com/media/"
 MEDIA_ROOT = here('media')
 
-# Place where upload post files
-# See also: https://github.com/shaunsephton/django-ckeditor#required
-CKEDITOR_UPLOAD_PATH = MEDIA_ROOT
-
-CKEDITOR_CONFIGS = {
-    'default': {
-        'toolbar': 'Full',
-    },
-}
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash.
@@ -149,7 +140,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django.contrib.admin',
     'django.contrib.admindocs',
-    'ckeditor',
+    'redactor',
     'jquest',
 )
 

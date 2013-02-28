@@ -1,7 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
 from jsonfield import JSONField
-from ckeditor.fields import RichTextField
     
 class Instance(models.Model):
     name = models.CharField(max_length=135, help_text='Name of the Instance. Ex: "Syrian Quest"')
@@ -29,7 +28,7 @@ class MissionRelationship(models.Model):
 class Post(models.Model):
     title      = models.CharField(max_length=255, blank=True)
     excerpt    = models.CharField(max_length=1536, blank=True)
-    content    = RichTextField(blank=True)  
+    content    = models.TextField(blank=True)  
     slug       = models.SlugField(max_length=100)
     created_at = models.DateTimeField(null=True, auto_now_add=True, db_column='created_at', blank=True)
     upadted_at = models.DateTimeField(null=True, auto_now=True, db_column='updated_at', blank=True)

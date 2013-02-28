@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 from django.contrib import admin
 from django.contrib.sites.models import Site
+from django import forms
 from datetime import datetime
 from modeltranslation.admin import TranslationAdmin
+from redactor.widgets import RedactorEditor
 from jquest.models import *
 
 
@@ -27,7 +29,10 @@ class MissionAdmin(admin.ModelAdmin):
 
 class PostAdmin(TranslationAdmin):
     # Populate the slug field automaticly
-    prepopulated_fields = {'slug':('title_en',),}
+    prepopulated_fields = {'slug':('title_en',),}    
+    formfield_overrides = {
+        models.TextField: {'widget': RedactorEditor},
+    }
 
 class UserOauthAdmin(admin.ModelAdmin):
     pass
