@@ -25,7 +25,7 @@ And load it :
 ### Dependencies
 To download and set up the whole dependancies three and the active virtualenv, simply run from the project's root directory:
 
-    $ pip install -r requirements.text
+    $ pip install -r requirements.txt
 
 ### Environment variables
 The following environment variables should be use 
