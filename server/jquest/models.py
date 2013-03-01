@@ -77,10 +77,11 @@ class EntityFamily(models.Model):
         verbose_name_plural = "Entity families"
 
     def __unicode__(self):
-        return self.name
+        return str(self.name)
 
 class Entity(models.Model):
     body = JSONField()
+    solution = models.CharField(max_length=50, help_text="Optional solution for trusted sources", null=True, blank=True)
     family =  models.ForeignKey(EntityFamily, null=False)    
     fid = models.CharField(max_length=50, help_text="Unique ID of the field in its family")
     created_at = models.DateTimeField(null=True, auto_now_add=True, db_column='created_at', blank=True)
@@ -91,7 +92,10 @@ class Entity(models.Model):
         unique_together = ('family', 'fid') 
 
     def __unicode__(self):
-        return str(self.id) + "  (" + str(self.family) + ')'
+        if not self.solution:
+            return str(self.id) + "  (" + str(self.family) + ')'
+        else:
+            return str(self.id) + "  (" + str(self.family) + '): ' + self.solution
 
 class EntityEval(models.Model):
     entity =  models.ForeignKey(Entity, null=False)

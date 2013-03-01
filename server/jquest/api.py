@@ -388,10 +388,11 @@ class PostResource(ModelResource):
 
         authentication = BasicAuthentication()
         authorization = DjangoAuthorization()
-
+ 
 
 
 class EntityFamilyResource(ModelResource):
+
     class Meta:
         queryset = EntityFamily.objects.all()
         resource_name = 'entity_family'
@@ -412,7 +413,8 @@ class EntityResource(ModelResource):
         "jquest.api.EntityEvalResource",
         attribute=lambda bundle: EntityEval.objects.filter(entity=bundle.obj), 
         null=True,
-        full=True
+        full=True,
+        related_name='entity'
     )
 
     class Meta:
@@ -421,7 +423,8 @@ class EntityResource(ModelResource):
         always_return_data = True
         filtering = {
             'family': ALL_WITH_RELATIONS,
-            'body': ALL
+            'body': ALL,
+            'solution': ALL
         }     
         
         ordering = filtering
@@ -440,8 +443,13 @@ class EntityResource(ModelResource):
             base_object_list = base_object_list.exclude(entityeval__user__id=not_evaluated_by)
 
         evaluated_by = request.GET.get('evaluated_by', None)
-        if evaluated_by:           
+        if evaluated_by:
             base_object_list = base_object_list.filter(entityeval__user__id=evaluated_by)
+        
+        have_solution = request.GET.get('have_solution', None)
+        if have_solution:
+            base_object_list = base_object_list.exclude(solution="")
+
 
         return base_object_list.filter(**filters).distinct()
 
@@ -450,7 +458,7 @@ class EntityResource(ModelResource):
         Set id instead of uri 
         """   
         if is_digit_id('family', bundle.data):
-            bundle.data['family'] = EntityFamily.objects.get(id=bundle.data['family'])        
+            bundle.data['family'] = EntityFamily.objects.get(id=bundle.data['family'])            
         return bundle
 
     def dehydrate_body(self, bundle):
